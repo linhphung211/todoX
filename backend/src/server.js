@@ -1,0 +1,27 @@
+import express from 'express';
+import tasksRouter from './routes/tasksRouters.js';
+import { connectDB } from './config/db.js';
+import dotenv from 'dotenv';
+import cors from 'cors';
+
+dotenv.config();
+
+const PORT = process.env.PORT || 5001;
+const app = express();
+
+
+// middleware
+app.use(express.json());
+app.use(cors({ origin: 'http://127.0.0.1:5173' }));
+
+app.use("/api/tasks", tasksRouter);
+
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  })
+  console.log("Database connected successfully");
+}).catch((error) => {
+  console.error("Database connection failed:", error);
+});
+
